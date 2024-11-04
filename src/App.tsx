@@ -1,37 +1,19 @@
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import { useNavigate } from "react-router-dom";
+import PageAuth from "./pages/PageAuth";
+import PrivateRoute from "./routes/PrivateRoute";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-  const navigate = useNavigate();
-
-  // TODO: 추상화 필요 (ex. useAuth)
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.log("???");
-    navigate("/auth");
-  }
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Routes>
+        {/* Login before accessing the root route */}
+        <Route path="/auth" element={<PageAuth />} />
+        {/* content routes */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/" element={<div>home</div>} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

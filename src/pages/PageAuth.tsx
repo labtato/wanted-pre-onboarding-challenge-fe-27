@@ -1,7 +1,8 @@
 import { FC } from "react";
+import LoginInput from "../components/pageAuth/LoginInput";
 
 const PageAuth: FC = () => {
-  return <div>login</div>;
+  return <LoginInput />;
 };
 
 export default PageAuth;
