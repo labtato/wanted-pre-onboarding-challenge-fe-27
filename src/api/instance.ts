@@ -2,13 +2,18 @@ import axios from "axios";
 import { AUTH_TOKEN } from "../constants";
 
 const createInstance = () => {
-  const header = localStorage.getItem(AUTH_TOKEN);
-
   const instance = axios.create({
     baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: header,
-    },
+  });
+
+  instance.interceptors.request.use((config) => {
+    const token = localStorage.getItem(AUTH_TOKEN);
+
+    if (token) {
+      config.headers.Authorization = token;
+    }
+
+    return config;
   });
 
   return instance;
