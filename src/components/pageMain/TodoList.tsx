@@ -20,6 +20,7 @@ const Todolist = () => {
   //
   //
   const handleTodoClick = (id: string) => {
+    if (id === todoId) return;
     navigate(`${id}`);
   };
 
