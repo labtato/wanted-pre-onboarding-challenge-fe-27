@@ -1,21 +1,23 @@
 import { useState } from "react";
 import TodoDialog from "./TodoDialog";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postCreateTodo } from "@/api/todos";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
-type TodoCreateProps = {
-  onTodoCreate?: () => void;
-};
-
-const TodoCreate = ({ onTodoCreate }: TodoCreateProps) => {
+const TodoCreate = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
   const { mutate } = useMutation({
     mutationKey: ["postCreateTodo"],
     mutationFn: (args: { title: string; content: string }) =>
       postCreateTodo(args),
-    // invalidateQueries && page refresh 보다 나은 걸까..?
-    onSuccess: () => {
-      onTodoCreate?.();
+    onSuccess: ({ data: { data } }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTodos"],
+      });
+      navigate(data.id);
     },
   });
 
@@ -37,19 +39,17 @@ const TodoCreate = ({ onTodoCreate }: TodoCreateProps) => {
 
   return (
     <>
-      <div
-        onClick={handleTriggerClick}
-        className="flex w-full items-center justify-center rounded-md bg-black py-1 font-bold text-white hover:cursor-pointer hover:bg-opacity-70"
-      >
+      <Button className="w-full font-bold" onClick={handleTriggerClick}>
         Create TODO
-      </div>
-      <TodoDialog
-        open={dialogOpen}
-        title="Create TODO"
-        action="생성"
-        onClose={handleDialogClose}
-        onAction={handleDialogAction}
-      />
+      </Button>
+      {dialogOpen && (
+        <TodoDialog
+          title="Create TODO"
+          action="생성"
+          onClose={handleDialogClose}
+          onAction={handleDialogAction}
+        />
+      )}
     </>
   );
 };
