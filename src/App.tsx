@@ -1,3 +1,5 @@
+import TodoDetail from "./components/pageMain/TodoDetail";
+import TodoList from "./components/pageMain/TodoList";
 import PageAuth from "./pages/PageAuth";
 import PageMain from "./pages/PageMain";
 import PageSignup from "./pages/PageSignup";
@@ -13,7 +15,12 @@ function App() {
         <Route path="/signup" element={<PageSignup />} />
         {/* content routes */}
         <Route element={<PrivateRoute />}>
-          <Route path="/" element={<PageMain />} />
+          {/* main route */}
+          <Route path="/" element={<PageMain />}>
+            <Route path="/" element={<TodoList />}>
+              <Route path=":todoId" element={<TodoDetail />} />
+            </Route>
+          </Route>
         </Route>
       </Routes>
     </Router>
