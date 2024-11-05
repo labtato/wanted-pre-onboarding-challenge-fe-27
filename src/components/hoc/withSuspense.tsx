@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Fallback from "../suspense/fallback";
+import Fallback from "../ui/suspense/fallback";
 
 const withSuspense = (Component: React.ComponentType) => {
   return (props) => {
