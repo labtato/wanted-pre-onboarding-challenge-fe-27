@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -8,10 +8,10 @@ import {
   DialogTitle,
   DialogOverlay,
 } from "../ui/dialog";
+import { Button } from "../ui/button";
 
 interface TodoDialogProps {
   title: string;
-  open: boolean;
   action?: string;
   onAction: (args: { title: string; content: string }) => void;
   close?: string;
@@ -21,15 +21,16 @@ interface TodoDialogProps {
 
 const TodoDialog = ({
   title: dialogTitle,
-  open,
   action,
   onAction,
   close,
   onClose,
   defaultValues,
 }: TodoDialogProps) => {
-  const { title: defaultTitle = "", content: defaultContent = "" } =
-    defaultValues ?? {};
+  const { title: defaultTitle = "", content: defaultContent = "" } = useMemo(
+    () => defaultValues ?? {},
+    [defaultValues],
+  );
 
   const [title, setTitle] = useState(defaultTitle);
   const [content, setContent] = useState(defaultContent);
@@ -50,21 +51,36 @@ const TodoDialog = ({
     onClose();
   };
 
+  // TODO: open = false 일때 아예 언마운트 되도록 수정 필요
   return (
-    <Dialog open={open}>
+    <Dialog defaultOpen>
       <DialogOverlay onClick={handleCloseClick} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
-        <input value={title} onChange={handleTitleChange} />
-        <input value={content} onChange={handleContentChange} />
+        <div>
+          <div>제목</div>
+          <input
+            className="w-full rounded-md border border-zinc-300"
+            value={title}
+            onChange={handleTitleChange}
+          />
+        </div>
+        <div>
+          <div>내용</div>
+          <input
+            className="w-full rounded-md border border-zinc-300"
+            value={content}
+            onChange={handleContentChange}
+          />
+        </div>
         <DialogFooter>
-          <DialogClose onClick={handleActionClick}>
-            {action ?? "확인"}
+          <DialogClose asChild>
+            <Button onClick={handleActionClick}>{action ?? "확인"}</Button>
           </DialogClose>
-          <DialogClose onClick={handleCloseClick}>
-            {close ?? "닫기"}
+          <DialogClose asChild>
+            <Button onClick={handleCloseClick}>{close ?? "닫기"}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

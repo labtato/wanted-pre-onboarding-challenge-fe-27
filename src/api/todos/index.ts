@@ -28,7 +28,7 @@ export type GetTodoByIdReq = {
 };
 
 /**
- * GET /todos
+ * GET /todos/:id
  */
 export const getTodoById = (req: GetTodoByIdReq) => {
   return instance.get(`/todos/${req.id}`).then((res) => res.data);
@@ -51,8 +51,24 @@ export type PostDeleteTodoReq = {
 };
 
 /**
- * POST /todos
+ * DELETE /todos/:id
  */
 export const postDeleteTodo = (req: PostDeleteTodoReq) => {
-  return instance.post(`/todos/${req.id}`, req);
+  return instance.delete(`/todos/${req.id}`);
+};
+
+export type PutUpdateTodoReq = {
+  id: string;
+  title: string;
+  content: string;
+};
+
+/**
+ * PUT /todos/:id
+ */
+export const putUpdateTodo = (req: PutUpdateTodoReq) => {
+  return instance.put(`/todos/${req.id}`, {
+    title: req.title,
+    content: req.content,
+  });
 };

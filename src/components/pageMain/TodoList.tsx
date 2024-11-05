@@ -11,7 +11,6 @@ const Todolist = () => {
   const { todoId } = useParams<{ todoId: string }>();
   const {
     data: { data },
-    refetch,
   } = useSuspenseQuery<GetTodosRes>({
     queryKey: ["getTodos"],
     queryFn: () => getTodos(),
@@ -22,10 +21,6 @@ const Todolist = () => {
   //
   const handleTodoClick = (id: string) => {
     navigate(`${id}`);
-  };
-
-  const handleTodoCreate = () => {
-    refetch();
   };
 
   //
@@ -42,12 +37,13 @@ const Todolist = () => {
     <div className="flex h-full gap-4">
       <div className="flex h-full w-1/3 flex-col gap-2">
         <div className="flex flex-col items-center justify-center">
-          <TodoCreate onTodoCreate={handleTodoCreate} />
+          <TodoCreate />
         </div>
         <div className="overflow-auto">
           {data.length > 0 &&
             data.map((todo) => (
               <TodoListItem
+                key={todo.id}
                 todo={todo}
                 onItemClick={() => {
                   handleTodoClick(todo.id);
