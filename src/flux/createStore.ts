@@ -1,5 +1,7 @@
 import { Action, CreateStore, Listener, Reducer } from "./types";
 
+// TODO: can we write test for the store?
+
 /**
  * @description flux store 생성 함수
  * @param reducer state와 action을 받아 state를 반환하는 함수
