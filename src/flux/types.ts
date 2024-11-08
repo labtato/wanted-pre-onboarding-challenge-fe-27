@@ -1,26 +1,26 @@
-/* eslint-disable */
-export type Listener = () => void;
+/**
+ * reducer 는 모든 경우에 state를 리턴 (action 이 유효하지 않은 경우에도 state 리턴을 보장)
+ */
+export type Reducer<S = unknown, A extends Action = Action> = (
+  state: S | undefined,
+  action: A,
+) => S;
 
+/* 액션 구분을 위한 type 속성을 require */
+export type Action = { type: string; [key: string]: unknown };
+
+/* subscribe 시 등록할 listener 및 등록 해제 함수의 형태 정의 */
+export type Listener = () => void;
 export type Unsubscribe = () => void;
 
-export type State = any;
-
-export type Action = { type: string };
-
-/**
- * Reducer MUST return the state of type S (default case), for populating the state initialization
- */
-export type Reducer<
-  S = any,
-  A extends Action = Action & { [key: string]: unknown },
-> = (state: S | undefined, action: A) => S;
-
-export interface Store {
-  getState(): State;
-  dispatch(action: Action): Action;
-  subscribe(listener: () => void): Unsubscribe;
+/* Store 는 state 및 action 의 형태를 generic 으로 정의 */
+export interface Store<S, A extends Action = Action> {
+  getState(): S;
+  dispatch(action: A): A;
+  subscribe(listener: Listener): Unsubscribe;
 }
 
+/* createStore */
 export interface CreateStore {
-  (reducer: (state: State, action: Action) => State): Store;
+  <S, A extends Action>(reducer: Reducer<S, A>): Store<S>;
 }
